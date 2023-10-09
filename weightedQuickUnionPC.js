@@ -28,7 +28,7 @@ function union (x, y) {
   if (connected(x, y)) return `${x} and ${y} are  connected by root ${findRoot(x)}`;
 
   let rootTree, targetTree;
-  if (sz[x] <= sz[y]) {
+  if (sz[id[x].root] <= sz[id[y].root]) {
     rootTree = y;
     targetTree = x;
   } else {
@@ -38,14 +38,5 @@ function union (x, y) {
 
   id[targetTree].parent = id[rootTree].value;
   id[targetTree].root = id[rootTree].root;
-  sz[rootTree] += sz[targetTree];
-  sz[targetTree] = sz[rootTree];
+  sz[id[rootTree].root] += sz[targetTree];
 };
-
-console.log(makeIDObj([10,12,14,15,16,19,20]));
-console.log(findRoot(12));
-console.log(connected(12, 14));
-union(12, 14);
-console.log(id, sz);
-console.log(connected(12, 14));
-console.log(findRoot(12), findRoot(14));
