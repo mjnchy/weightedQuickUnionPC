@@ -1,31 +1,51 @@
-let id = [];
-let sz = [];
-let rf = [];
+let id = {};
+let sz = {};
 
-function makeIDArr (arr) {
-  if (!Array.isArray(arr)) return "Array parameter required. Parameter is not an array.";
-  
-  rf = arr;
-  id.length = arr.length;
+function makeIDObj (arr) {
+  if (!Array.isArray(arr)) return `Array parameter required. Parameter is not an array.`;
 
-  for (let i = 0; i < id.length; i++) {
-    id[i] = {
+  for (let i = 0; i < arr.length; i++) {
+    id[arr[i]] = {
       value: arr[i],
       parent: arr[i],
       root: arr[i],
     };
-    sz[i] = 1;
+    sz[arr[i]] = 1;
   }
 
   return id;
 };
 
-function connected(x, y) {
-  return id[rf.indexOf(x)] == id[rf.indexOf(y)];
+function findRoot (x) {
+  return id[x].root;
 };
 
-function 
+function connected (x, y) {
+  return findRoot(x) == findRoot(y);
+};
 
-console.log(makeIDArr([10,11,12,13,14,15,16,17,18,19]));
-console.log(id[2], id[3]);
-console.log(connected(12,13))
+function union (x, y) {
+  if (connected(x, y)) return `${x} and ${y} are  connected by root ${findRoot(x)}`;
+
+  let rootTree, targetTree;
+  if (sz[x] <= sz[y]) {
+    rootTree = y;
+    targetTree = x;
+  } else {
+    rootTree = x;
+    targetTree = y;
+  };
+
+  id[targetTree].parent = id[rootTree].value;
+  id[targetTree].root = id[rootTree].root;
+  sz[rootTree] += sz[targetTree];
+  sz[targetTree] = sz[rootTree];
+};
+
+console.log(makeIDObj([10,12,14,15,16,19,20]));
+console.log(findRoot(12));
+console.log(connected(12, 14));
+union(12, 14);
+console.log(id, sz);
+console.log(connected(12, 14));
+console.log(findRoot(12), findRoot(14));
